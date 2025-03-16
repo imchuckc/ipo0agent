@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import LoadingScreen from '@/components/LoadingScreen';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   // Simulate loading time
   useEffect(() => {
@@ -16,6 +18,11 @@ export default function Home() {
     // Clean up the timer
     return () => clearTimeout(timer);
   }, []);
+
+  // Handle navigation to analysis pages
+  const handleNavigation = (path: string) => {
+    router.push(path);
+  };
 
   return (
     <main>
@@ -32,13 +39,22 @@ export default function Home() {
             <p className="mb-6">Select an analysis type to begin:</p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <button className="bg-primary-600 hover:bg-primary-500 p-4 rounded-lg transition-colors">
+              <button 
+                className="bg-primary-600 hover:bg-primary-500 p-4 rounded-lg transition-colors"
+                onClick={() => handleNavigation('/timing-analysis')}
+              >
                 Timing Path Analysis
               </button>
-              <button className="bg-primary-600 hover:bg-primary-500 p-4 rounded-lg transition-colors">
+              <button 
+                className="bg-primary-600 hover:bg-primary-500 p-4 rounded-lg transition-colors"
+                onClick={() => handleNavigation('/congestion-analysis')}
+              >
                 Congestion Analysis
               </button>
-              <button className="bg-primary-600 hover:bg-primary-500 p-4 rounded-lg transition-colors">
+              <button 
+                className="bg-primary-600 hover:bg-primary-500 p-4 rounded-lg transition-colors"
+                onClick={() => handleNavigation('/log-analysis')}
+              >
                 Log Analysis
               </button>
             </div>
