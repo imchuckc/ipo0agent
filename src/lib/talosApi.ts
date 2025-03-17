@@ -100,14 +100,33 @@ export async function fetchTimingReport(reportPath: string): Promise<string> {
     });
     
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || `Failed to fetch from Talos: ${response.status} ${response.statusText}`);
+      // Try to parse error response
+      try {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Failed to fetch from Talos: ${response.status} ${response.statusText}`);
+      } catch (jsonError) {
+        // If JSON parsing fails, throw the original error
+        throw new Error(`Failed to fetch from Talos: ${response.status} ${response.statusText}`);
+      }
     }
     
     const text = await response.text();
+    
+    // Check if this is mock data (for UI indication)
+    if (text.includes('[MOCK DATA]')) {
+      console.warn('Received mock data instead of actual Talos data');
+    }
+    
     return text;
   } catch (error) {
     console.error('Error fetching timing report:', error);
+    
+    // For development/demo purposes, fall back to mock data
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Falling back to mock data for development');
+      return getMockTimingData(reportPath);
+    }
+    
     throw error;
   }
 }
@@ -150,5 +169,7 @@ Delay      Time   Description
 1.227      1.227  data required time
 -1.272     -1.272 data arrival time
 ------------------------------------------------------------------------------------
--0.045     -0.045 slack (VIOLATED)`;
+-0.045     -0.045 slack (VIOLATED)
+
+[MOCK DATA] This is sample data for demonstration. Connect to NVIDIA VPN to access real data.`;
 } 

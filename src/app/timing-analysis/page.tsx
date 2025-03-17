@@ -272,7 +272,7 @@ export default function TimingAnalysisPage() {
       setSelectedExample('');
     } catch (error) {
       console.error('Error fetching from Talos:', error);
-      setTalosError(error instanceof Error ? error.message : 'Failed to fetch from Talos');
+      setTalosError(error instanceof Error ? error.message : 'Failed to fetch from Talos. Make sure you are connected to NVIDIA VPN.');
     } finally {
       setIsFetchingTalos(false);
     }
@@ -289,6 +289,12 @@ export default function TimingAnalysisPage() {
           <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center">Timing Path Analysis</h1>
           <p className="text-center mb-8">Paste your timing path report from Synopsys PrimeTime or Cadence Innovus/Tempus for analysis</p>
         </motion.div>
+
+        {/* VPN Warning Banner */}
+        <div className="bg-yellow-500/20 border border-yellow-500/50 p-4 rounded-lg mb-6">
+          <p className="font-bold text-yellow-300">⚠️ VPN Required</p>
+          <p className="text-yellow-100">You must be connected to NVIDIA VPN to fetch data from Talos.</p>
+        </div>
 
         {/* Talos Integration Section */}
         <div className="bg-white/10 backdrop-blur-sm p-6 rounded-lg mb-6">
